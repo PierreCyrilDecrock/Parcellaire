@@ -126,7 +126,7 @@ body{
 .th canvas{display:block;width:100%;height:auto;background:var(--paper);opacity:0;transform:scale(.96);transition:opacity .32s ease,transform .32s cubic-bezier(.2,.7,.2,1)}
 .th canvas.ready{opacity:1;transform:none}
 .ghost[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-@media (prefers-reduced-motion:reduce){.th canvas{opacity:1;transform:none;transition:none}.grp>summary::after{transition:none}}
+
 .th span{font:600 11px/1.1 var(--font-display);padding:6px 3px}
 .th:hover{border-color:var(--accent)}
 .th[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
@@ -2138,7 +2138,7 @@ var store={
   get:function(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}},
   set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}}
 };
-var REDUCED=false;try{REDUCED=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+var REDUCED=false; /* animations toujours actives, même si le système demande de les réduire */
 if(REDUCED){DEFAULTS.anim='off';state.anim='off';}
 var locked=store.get('parcellaire.locks')||{};
 var LOCKSVG='<svg class="o" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.6"/><path d="M5.2 7V5a2.8 2.8 0 0 1 5.4-1"/></svg><svg class="c" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.6"/><path d="M5.2 7V5a2.8 2.8 0 0 1 5.6 0v2"/></svg>';
