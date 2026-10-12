@@ -1,6 +1,6 @@
 /* Service worker de Parcellaire : tout est mis en cache au premier chargement, l'application marche ensuite hors-ligne.
    Pour publier une nouvelle version, incrémentez VERSION : les anciens caches sont supprimés et les fichiers retéléchargés. */
-const VERSION = 'parcellaire-v2';
+const VERSION = 'parcellaire-v3';
 const SHELL = [
   './', './index.html', './manifest.webmanifest',
   './fonts/bricolage-latin.woff2', './fonts/bricolage-latin-ext.woff2', './fonts/jbmono-500.woff2', './fonts/jbmono-700.woff2',

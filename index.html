@@ -195,6 +195,16 @@ input[type=range]{width:100%;margin:0;accent-color:var(--accent)}
   .szbtn{display:grid;top:14px;right:calc(clamp(16px,4vw,40px) + 4px)}
   .panel{padding:14px}
 }
+/* Bureau : l'aperçu occupe toute la hauteur de la fenêtre et reste en place ; seuls les réglages défilent, sur le côté. */
+@media (min-width:900px){
+  body{padding-block:16px 40px}
+  .app{max-width:1500px;height:calc(100vh - 32px);height:calc(100dvh - 32px);min-height:480px;grid-template-columns:minmax(0,1fr) 380px;grid-template-rows:auto minmax(0,1fr);gap:14px 32px}
+  .stage{position:relative;top:auto;height:100%;align-self:stretch;justify-content:center}
+  .head h1{font-size:44px;margin:0 0 8px}
+  .head p{font-size:14px}
+  .panel{overflow:auto;min-height:0;overscroll-behavior:contain}
+}
+@media (min-width:900px) and (max-height:780px){.head p{display:none}.head h1{font-size:36px;margin:0}}
 [hidden]{display:none!important}
 .rules{max-width:1160px;margin:56px auto 0}
 .rules h2{font-size:clamp(24px,4vw,32px);letter-spacing:-.025em;line-height:1.05;margin:0 0 6px;font-weight:700}
@@ -387,7 +397,7 @@ var PALETTES={
 var FIELD_TYPES=['pasture','crop','gold','earth','special'];
 var TEX_OF={pasture:'grass',crop:'crop',gold:'crop',earth:'plough',special:'crop'};
 var FORMATS={portrait:0.75,carre:1,paysage:4/3};
-var MAXW={portrait:520,carre:640,paysage:820};
+var MAXW={portrait:640,carre:800,paysage:1000};
 
 /* ===== génération ===== */
 function generate(o){
@@ -864,7 +874,7 @@ var GROUPS=[
   ]},
   {title:'Ambiance',ic:'mood',items:[
     {t:'seg',k:'mood',l:'Moment',d:'Lumière appliquée à tout le paysage. La neige recouvre vraiment les champs, les toits et les arbres.',o:[['jour','Plein jour'],['aube','Aube'],['couchant','Couchant'],['crepuscule','Crépuscule'],['neige','Neige']]},
-    {t:'pill',k:'anim',l:'Effet animé',d:'Calme : nuages et eau. Vent : rafales dans les cultures. Pluie : averse et éclair. Neige : la couverture blanche gagne les champs puis fond. Se coupe automatiquement si votre appareil demande moins de mouvement.',o:[['off','Aucun'],['calme','Calme'],['vent','Vent'],['nuages','Nuages'],['eau','Eau'],['pluie','Pluie'],['neige','Neige']]}
+    {t:'pill',k:'anim',l:'Effet animé',d:'Calme : nuages et eau. Vent : rafales dans les cultures. Pluie : averse et éclair. Neige : la couverture blanche gagne les champs puis fond.',o:[['off','Aucun'],['calme','Calme'],['vent','Vent'],['nuages','Nuages'],['eau','Eau'],['pluie','Pluie'],['neige','Neige']]}
   ]},
   {title:'Parcelles',ic:'parcel',items:[
     {k:'parcel',l:'Taille des parcelles',d:'Surface moyenne d\'une parcelle.',u:'%',ex:['Petites','Moyennes','Grandes']},
@@ -1770,6 +1780,7 @@ function draw(){
   var A=model.A,cs=getComputedStyle(stage),avail=(Math.floor(stage.clientWidth)||320)-(parseFloat(cs.paddingLeft)||0)-(parseFloat(cs.paddingRight)||0);
   var wcss=Math.min(avail,MAXW[state.format]);
   if(isMobile()){var maxH=Math.floor(vpH()*PHS[phIdx])-24;wcss=Math.min(wcss,Math.max(110,Math.floor(maxH*A)));}
+  else{var sh=stage.clientHeight;if(sh>200){var mh=sh-(statsEl.offsetHeight||18)-12-6;wcss=Math.min(wcss,Math.max(160,Math.floor(mh*A)));}}
   var hcss=Math.round(wcss/A);
   var dpr=Math.min(window.devicePixelRatio||1,2)*(LOWRES?LOWQ:1);
   var W=Math.round(wcss*dpr),H=Math.round(hcss*dpr);
@@ -2125,7 +2136,7 @@ window.addEventListener('resize',function(){
   rzTimer=setTimeout(function(){var h=vpH();if(Math.abs(h-lastVH)>90){lastVH=h;draw();}},180);
 });
 if(window.ResizeObserver){
-  new ResizeObserver(function(){var w=Math.floor(stage.clientWidth);if(w!==lastW){lastW=w;draw();}}).observe(stage);
+  var lastSH=0;new ResizeObserver(function(){var w=Math.floor(stage.clientWidth),hh=isMobile()?0:Math.floor(stage.clientHeight);if(w!==lastW||hh!==lastSH){lastW=w;lastSH=hh;draw();}}).observe(stage);
 }
 function onTheme(){draw();scheduleThumbs();}
 try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',onTheme);}catch(e){}
